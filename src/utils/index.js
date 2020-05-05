@@ -1,3 +1,4 @@
 import * as validations from './validations';
+import * as request from './request';
 
-export { validations };
+export { request, validations };

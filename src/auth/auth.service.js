@@ -1,19 +1,17 @@
-import axios from 'axios';
 import authData from './auth.data';
-
-const API_URL = 'http://localhost:3050/';
+import * as utils from '../utils';
 
 class AuthService {
     login(email, password) {
-        return axios
-            .post(API_URL + 'users/login', {
+        return utils.request
+            .post('users/login', {
                 email,
                 password,
             })
             .then((response) => {
-                //console.log(response);
-                if (response.data.accessToken) {
-                    authData.storeUser(response.data);
+                //console.log(response.data.data);
+                if (response.data.data.token) {
+                    authData.storeUser(response.data.data);
                 }
 
                 return response.data;
@@ -26,7 +24,20 @@ class AuthService {
 
     isAuthenticated() {
         const currUser = this.getCurrentUser();
-        return (currUser && currUser !== '');
+        return currUser && currUser !== '';
+    }
+
+    getToken() {
+        if (this.isAuthenticated()) {
+            let user = this.getCurrentUser();
+            return user.token;
+        }
+
+        return null;
+    }
+
+    logout() {
+        authData.remove();
     }
 }
 

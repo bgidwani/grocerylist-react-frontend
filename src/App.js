@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+} from 'react-router-dom';
 import './App.css';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import TypoGraphy from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-// import purple from '@material-ui/colors/purple';
-// import green from '@material-ui/colors/green';
+import purple from '@material-ui/core/colors/purple';
+import green from '@material-ui/core/colors/green';
 
 import AuthService from './auth/auth.service';
 
 import Login from './login/login.component';
-import Users from './users/users.component';
+import GroceryList from './lists/grocerylist.component';
 
 const styles = () => ({
     root: {
@@ -29,48 +34,53 @@ const styles = () => ({
 // ==================================
 const defaultTheme = createMuiTheme();
 
-/*const purpleTheme = createMuiTheme({
-  palette: {
-    primary: purple,
-    secondary: green
-  }
+const purpleTheme = createMuiTheme({
+    palette: {
+        primary: purple,
+        secondary: {
+            main: '#f44336',
+        },
+    },
 });
 
 const fontTheme = createMuiTheme({
-  palette: {
-    secondary: purple,
-    primary: green
-  },
-  typography: {
-    fontFamily: ['Courier', 'Helvetica'],
-  }
-})
+    palette: {
+        secondary: purple,
+        primary: green,
+    },
+    typography: {
+        fontFamily: ['Courier', 'Helvetica'],
+    },
+});
 
-const themes = [defaultTheme, purpleTheme, fontTheme]
-*/
+const themes = [defaultTheme, purpleTheme, fontTheme];
 
 // ==================================
 //     End theme definitions
 // ==================================
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={(props) => (
-      AuthService.isAuthenticated() === true
-        ? <Component {...props} />
-        : <Redirect to='/login' />
-    )} />
-  )
+    <Route
+        {...rest}
+        render={(props) =>
+            AuthService.isAuthenticated() === true ? (
+                <Component {...props} />
+            ) : (
+                <Redirect to="/login" />
+            )
+        }
+    />
+);
 
 class App extends Component {
     constructor(props) {
         super(props);
-        //this.logOut = this.logOut.bind(this);
 
         this.state = {
             showModeratorBoard: false,
             showAdminBoard: false,
             currentUser: undefined,
-            theme: defaultTheme,
+            theme: themes[0],
         };
     }
 
@@ -84,12 +94,16 @@ class App extends Component {
         }
     }
 
+    logOut() {
+        AuthService.logout();
+    }
+
     render() {
         const { classes } = this.props;
         const { currentUser } = this.state;
         return (
-            <Router>
-                <div className={classes.root}>
+            <div className={classes.root}>
+                <Router>
                     <MuiThemeProvider theme={this.state.theme}>
                         {currentUser ? (
                             <AppBar position="static">
@@ -99,37 +113,28 @@ class App extends Component {
                                         className={classes.title}
                                         color="inherit"
                                     >
-                                        Groceries
+                                        Lists
                                     </TypoGraphy>
-                                    <div className="navbar-nav ml-auto">
-                                        <li className="nav-item">
-                                            <Button color="inherit">
-                                                {currentUser.username}
-                                            </Button>
-                                        </li>
-                                        <li className="nav-item">
-                                            <a
-                                                href="/login"
-                                                className="nav-link"
-                                                onClick={this.logOut}
-                                            >
-                                                LogOut
-                                            </a>
-                                        </li>
-                                    </div>
+                                    <Button
+                                        color="inherit"
+                                        href="/login"
+                                        onClick={this.logOut}
+                                    >
+                                        LogOut
+                                    </Button>
                                 </Toolbar>
                             </AppBar>
                         ) : (
                             <div></div>
                         )}
                     </MuiThemeProvider>
-                </div>
 
-                <Switch>
-                    <Route exact path="/login" component={Login} />
-                    <PrivateRoute exact path="/" component={Users} />
-                </Switch>
-            </Router>
+                    <Switch>
+                        <Route exact path="/login" component={Login} />
+                        <PrivateRoute exact path="/" component={GroceryList} />
+                    </Switch>
+                </Router>
+            </div>
         );
     }
 }
