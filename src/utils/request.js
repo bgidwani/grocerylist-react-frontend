@@ -6,14 +6,7 @@ const generateUrl = (relativePath) => {
     return `${API_URL}/${relativePath}`;
 };
 
-const createOptions = (
-    httpmethod,
-    url,
-    requestBody,
-    contentType,
-    token,
-    failOnError
-) => {
+const createOptions = (httpmethod, url, requestBody, contentType, token) => {
     let options = {
         method: httpmethod,
         url: url,
@@ -22,7 +15,6 @@ const createOptions = (
             'content-type': 'application/json',
             Authorization: '',
         },
-        failOnStatusCode: failOnError,
     };
 
     if (contentType) {
@@ -40,7 +32,7 @@ const requestPath = (httpmethod, relativePath, body, contentType, token) => {
     let url = generateUrl(relativePath);
 
     return axios.request(
-        createOptions(httpmethod, url, body, contentType, token, false)
+        createOptions(httpmethod, url, body, contentType, token)
     );
 };
 

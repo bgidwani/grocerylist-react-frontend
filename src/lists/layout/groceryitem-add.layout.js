@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GroceryItemAddCard() {
     const { user } = useAuthDataContext();
-    const { refreshList } = useGroceryListContext();
+    const { refreshList, setToast } = useGroceryListContext();
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [name, setName] = React.useState('');
@@ -72,6 +72,9 @@ export default function GroceryItemAddCard() {
 
                 //close the modal pop-up
                 setOpen(false);
+
+                //display toast message on parent
+                setToast(`List ${name} added successfully`);
             });
         }
     };

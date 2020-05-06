@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { red } from '@material-ui/core/colors';
 import IconButton from '@material-ui/core/IconButton';
+import GroceryListService from '../grocerylist.service';
+import { useGroceryListContext } from '../context/grocerylist-provider';
 
 const useStyles = makeStyles((theme) => ({
     card: { maxWidth: 300 },
@@ -25,8 +27,20 @@ const useStyles = makeStyles((theme) => ({
     chip: { margin: theme.spacing(0.5) },
 }));
 
-export default function GroceryItemCard({ name, items }) {
+export default function GroceryItemCard({ listid, name, items }) {
     const classes = useStyles();
+    const { refreshList, setToast } = useGroceryListContext();
+
+    const handleDelete = () => {
+        GroceryListService.remove(listid).then((data) => {
+            if (data === true) {
+                setToast('List deleted');
+                refreshList();
+            } else {
+                setToast(data);
+            }
+        });
+    };
 
     return (
         <Card className={classes.card}>
@@ -37,7 +51,7 @@ export default function GroceryItemCard({ name, items }) {
                     </Avatar>
                 }
                 action={
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={handleDelete}>
                         <DeleteIcon color="inherit" />
                     </IconButton>
                 }

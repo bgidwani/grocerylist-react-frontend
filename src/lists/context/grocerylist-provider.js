@@ -7,6 +7,7 @@ const initialData = [];
 
 const GroceryListProvider = (props) => {
     const [items, setData] = useState(initialData);
+    const [toastMessage, setToast] = useState(null);
 
     /* The first time the component is rendered, it tries to
      * fetch the auth data from a source, like a cookie or
@@ -25,7 +26,7 @@ const GroceryListProvider = (props) => {
 
     return (
         <GroceryListContext.Provider
-            value={{ items, refreshList }}
+            value={{ items, toastMessage, setToast, refreshList }}
             {...props}
         />
     );
