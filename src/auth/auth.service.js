@@ -9,7 +9,7 @@ class AuthService {
                 password,
             })
             .then((response) => {
-                //console.log(response.data.data);
+                //console.log(response);
                 if (response.data.data.token) {
                     authData.storeUser(response.data.data);
                 }

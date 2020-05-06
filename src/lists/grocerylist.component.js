@@ -1,36 +1,19 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { makeStyles } from '@material-ui/core';
 import groceryListStyles from './grocerylist.styles';
-import GroceryListService from './grocerylist.service';
-import GroceryListLayout from './grocerylist.layout';
+import GroceryListLayout from './layout/main.layout';
+import GroceryListProvider from './context/grocerylist-provider';
 
-class GroceryList extends Component {
-    constructor(props) {
-        super(props);
+const useStyles = makeStyles(groceryListStyles);
 
-        this.state = {
-            list: [],
-        };
-    }
+const GroceryList = () => {
+    const classes = useStyles();
 
-    componentDidMount() {
-        GroceryListService.getAll().then((data) => {
-            this.setState({
-                list: data,
-            });
-        });
-    }
+    return (
+        <GroceryListProvider>
+            <GroceryListLayout classes={classes} />
+        </GroceryListProvider>
+    );
+};
 
-    render() {
-        const { classes } = this.props;
-
-        return (
-            <GroceryListLayout
-                classes={this.props.classes}
-                parentState={this.state}
-            />
-        );
-    }
-}
-
-export default withStyles(groceryListStyles)(GroceryList);
+export default GroceryList;
