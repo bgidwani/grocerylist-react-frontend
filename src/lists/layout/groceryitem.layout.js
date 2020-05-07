@@ -32,14 +32,18 @@ export default function GroceryItemCard({ listid, name, items }) {
     const { refreshList, setToast } = useGroceryListContext();
 
     const handleDelete = () => {
-        GroceryListService.remove(listid).then((data) => {
-            if (data === true) {
-                setToast('List deleted');
-                refreshList();
-            } else {
-                setToast(data);
-            }
-        });
+        var result = window.confirm('Sure you want to delete the list?');
+        if (result) {
+            //delete the list
+            GroceryListService.remove(listid).then((data) => {
+                if (data === true) {
+                    setToast('List deleted');
+                    refreshList();
+                } else {
+                    setToast(data);
+                }
+            });
+        }
     };
 
     return (

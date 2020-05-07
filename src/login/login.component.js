@@ -38,7 +38,7 @@ const Login = () => {
         }
     };
 
-    const onBlurPassword = (e) => {
+    const onChangePassword = (e) => {
         var input = e.target.value;
         if (!input || input !== '') {
             setPassword(input);
@@ -120,7 +120,7 @@ const Login = () => {
                             label="Password"
                             type="password"
                             id="password"
-                            onBlur={onBlurPassword}
+                            onChange={onChangePassword}
                             autoComplete="current-password"
                         />
                         <Button

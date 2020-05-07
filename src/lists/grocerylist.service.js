@@ -9,10 +9,6 @@ class GroceryListService {
             .get('list', AuthService.getToken())
             .then((response) => {
                 return response.data.data;
-            })
-            .catch((err) => {
-                console.log(`${this.service} - getAll error`, err.message);
-                return [];
             });
     }
 
