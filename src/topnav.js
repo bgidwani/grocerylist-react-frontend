@@ -19,7 +19,7 @@ const TopNav = () => {
     const styles = useStyles();
 
     return user ? (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Toolbar>
                 <IconButton edge="start" color="inherit" aria-label="menu">
                     <img
