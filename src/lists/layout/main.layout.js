@@ -34,7 +34,6 @@ const GroceryListLayout = (props) => {
                         />
                     </Grid>
                 ))}
-                <Grid item xs={12} sm={6} md={4} lg={4} xl={3}></Grid>
             </Grid>
             {toastMessage && (
                 <Snackbar
