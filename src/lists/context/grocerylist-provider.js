@@ -26,7 +26,7 @@ const GroceryListProvider = (props) => {
                     setData(data);
                 })
                 .catch((err) => {
-                    if (err.response.status === 401) {
+                    if (err.response && err.response.status === 401) {
                         onLogout();
                     } else {
                         console.log(err.response);
