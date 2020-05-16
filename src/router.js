@@ -4,6 +4,7 @@ import { useAuthDataContext } from './auth-provider';
 
 import Login from './login/login.component';
 import GroceryList from './lists/grocerylist.component';
+import Recipes from './recipes/recipe.component';
 
 const PrivateRoute = ({ component, ...options }) => {
     const { user } = useAuthDataContext();
@@ -15,7 +16,8 @@ const PrivateRoute = ({ component, ...options }) => {
 const Router = () => {
     return (
         <Switch>
-            <Route path="/login" component={Login} />
+            <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/recipes" component={Recipes} />
             <PrivateRoute path="/" component={GroceryList} />
         </Switch>
     );

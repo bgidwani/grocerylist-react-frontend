@@ -8,7 +8,8 @@ import green from '@material-ui/core/colors/green';
 
 import AuthDataProvider from './auth-provider';
 import Router from './router';
-import TopNav from './topnav';
+import TopNav from './topnav/topnav.component';
+import TopNavDataProvider from './topnav/topnav.provider';
 
 const styles = () => ({
     root: {
@@ -62,8 +63,10 @@ class App extends Component {
                 <BrowserRouter>
                     <MuiThemeProvider theme={this.state.theme}>
                         <AuthDataProvider>
-                            <TopNav />
-                            <Router />
+                            <TopNavDataProvider>
+                                <TopNav />
+                                <Router />
+                            </TopNavDataProvider>
                         </AuthDataProvider>
                     </MuiThemeProvider>
                 </BrowserRouter>
