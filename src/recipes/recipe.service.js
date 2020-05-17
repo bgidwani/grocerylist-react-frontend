@@ -1,5 +1,5 @@
 import * as utils from '../utils';
-import axios from 'axios';
+import AuthService from '../auth/auth.service';
 
 const testdata = {
     hits: [
@@ -32,13 +32,13 @@ const testdata = {
 
 class ReceipeService {
     search(keyword) {
-        return testdata;
+        //return testdata;
 
-        /*return axios.get(searchUrl)
-            .then(res => {
-                //console.log(res.data);
-                return res.data;
-            });*/
+        return utils.request
+            .get(`recipes?keyword=${keyword}`, AuthService.getToken())
+            .then((response) => {
+                return response.data.data;
+            });
     }
 }
 

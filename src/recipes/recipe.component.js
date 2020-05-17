@@ -56,9 +56,9 @@ const Recipes = () => {
     };
 
     const handleSearch = async (e) => {
-        let response = await RecipeService.search(search);
-        console.log('Response data', response.hits);
-        setRecipes(response.hits);
+        let data = await RecipeService.search(search);
+        //console.log('Response data', data);
+        setRecipes(data);
     };
 
     return (
@@ -85,7 +85,7 @@ const Recipes = () => {
                 <Grid container spacing={10} style={{ padding: '24px' }}>
                     {recipes.map((recipeitem) => (
                         <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
-                            <RecipeResults recipe={recipeitem.recipe} />
+                            <RecipeResults recipe={recipeitem} />
                         </Grid>
                     ))}
                 </Grid>
