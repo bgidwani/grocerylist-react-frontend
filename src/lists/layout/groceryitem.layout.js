@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Avatar from '@material-ui/core/Avatar';
@@ -21,16 +20,20 @@ import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
 import DisplayListSubItems from './components/display.list.subitems';
 import EditListSubItems from './components/edit.list.subitems';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
 
-const useStyles = makeStyles((theme) => ({
-    card: { maxWidth: 300 },
+const useStyles = makeStyles(() => ({
+    card: {
+        width: 300,
+    },
     avatar: {
         backgroundColor: red[500],
     },
     media: {
-        marginLeft: 50,
-        height: 200,
-        width: 200,
+        marginLeft: 35,
+        height: 220,
+        width: 220,
     },
 }));
 
@@ -45,6 +48,7 @@ export default function GroceryItemCard({ listid, name, items }) {
     const [isEditMode, setEditMode] = React.useState(false);
 
     const handleListDelete = () => {
+        setAnchorEl(null);
         var result = window.confirm('Sure you want to delete the list?');
         if (result) {
             //delete the list
@@ -61,13 +65,25 @@ export default function GroceryItemCard({ listid, name, items }) {
         }
     };
 
-    const handleExpandClick = () => {
+    const handleListEdit = () => {
+        setAnchorEl(null);
         setEditMode(true);
     };
 
     const handleItemEditClose = () => {
         refreshList();
         setEditMode(false);
+    };
+
+    //state used for displaying menu for individual list
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const displayListMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
     return (
@@ -81,41 +97,61 @@ export default function GroceryItemCard({ listid, name, items }) {
                     }
                     action={
                         <div>
-                            <IconButton onClick={handleExpandClick}>
-                                <Edit />
-                            </IconButton>
                             <IconButton
-                                aria-label="delete"
-                                onClick={handleListDelete}
+                                aria-label="settings"
+                                onClick={displayListMenu}
                             >
-                                <DeleteIcon color="inherit" />
+                                <MoreVertIcon />
                             </IconButton>
+                            <Menu
+                                id="list-menu"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <Typography display="block">
+                                    <IconButton
+                                        size="small"
+                                        onClick={handleListEdit}
+                                    >
+                                        <Edit color="inherit" />
+                                        <Typography variant="subtitle1">
+                                            Edit
+                                        </Typography>
+                                    </IconButton>
+                                </Typography>
+                                <Typography display="block">
+                                    <IconButton
+                                        size="small"
+                                        onClick={handleListDelete}
+                                    >
+                                        <DeleteIcon color="inherit" />
+                                        <Typography variant="subtitle1">
+                                            Delete
+                                        </Typography>
+                                    </IconButton>
+                                </Typography>
+                            </Menu>
                         </div>
                     }
-                    title={
-                        <Typography align="center" variant="h5">
-                            {name}
-                        </Typography>
-                    }
+                    title={<Typography variant="h6">{name}</Typography>}
                 />
-                <CardActionArea>
-                    <CardMedia
-                        className={classes.media}
-                        image="/assets/cart-checked.png"
+                <CardMedia
+                    className={classes.media}
+                    image="/assets/cart-checked.png"
+                />
+                <CardContent>
+                    <DisplayListSubItems
+                        subItems={subItems}
+                        limititems={true}
                     />
-                    <CardContent>
-                        <DisplayListSubItems
-                            subItems={subItems}
-                            limititems={true}
-                        />
-                    </CardContent>
-                </CardActionArea>
+                </CardContent>
             </Card>
             <Dialog
                 open={isEditMode}
                 onClose={handleItemEditClose}
                 TransitionComponent={Transition}
-                aria-labelledby="edit-list-subitems"
             >
                 <DialogTitle id="edit-list-subitems">{name}</DialogTitle>
                 <DialogContent>

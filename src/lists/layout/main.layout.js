@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import GroceryItemCard from './groceryitem.layout';
 import GroceryItemAddCard from './groceryitem-add.layout';
 import { useGroceryListContext } from '../context/grocerylist-provider';
@@ -15,18 +16,15 @@ const GroceryListLayout = (props) => {
     };
 
     return (
-        <div className={classes.root}>
-            <Grid container spacing={10} style={{ padding: '24px' }}>
+        <Container>
+            <Grid
+                container
+                justify="space-evenly"
+                spacing={5}
+                style={{ padding: '5px' }}
+            >
                 {items.map((item) => (
-                    <Grid
-                        key={item._id}
-                        item
-                        xs={12}
-                        sm={6}
-                        md={4}
-                        lg={4}
-                        xl={3}
-                    >
+                    <Grid key={item._id} item>
                         <GroceryItemCard
                             listid={item._id}
                             name={item.name}
@@ -47,7 +45,7 @@ const GroceryListLayout = (props) => {
                 </Snackbar>
             )}
             <GroceryItemAddCard />
-        </div>
+        </Container>
     );
 };
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Container, TextField } from '@material-ui/core';
 import MaterialTable from 'material-table';
 import GroceryListService from '../../grocerylist.service';
 
@@ -28,10 +29,32 @@ const emptyCallback = () => {};
 
 const EditListSubItems = ({ listid, subItems, callbackSubItemChange }) => {
     parentCallback = callbackSubItemChange || emptyCallback;
+    const [addItem, setAddItem] = useState('');
 
     const ListService = GroceryListService.list(listid);
 
     const eventHandlers = {
+        handleChange: (e) => {
+            setAddItem(e.target.value);
+        },
+        handleKeyDown: async (e) => {
+            if (e.key === 'Enter') {
+                let itemName = addItem;
+                let itemQty = 1;
+                await ListService.addsubitem(itemName, itemQty);
+                parentCallback((prevState) => {
+                    const data = [...prevState];
+                    data.push({
+                        name: itemName,
+                        quantity: itemQty,
+                        bought: false,
+                    });
+                    return data;
+                });
+                //clear the item
+                setAddItem('');
+            }
+        },
         handleItemClick: async (event, rowData) => {
             const updatedValue = !rowData.bought;
 
@@ -48,9 +71,6 @@ const EditListSubItems = ({ listid, subItems, callbackSubItemChange }) => {
         },
         handleItemAdd: async (newData) => {
             await ListService.addsubitem(newData.name, newData.quantity);
-
-            console.log('Invoking parent callback');
-
             parentCallback((prevState) => {
                 const data = [...prevState];
                 data.push({
@@ -92,20 +112,32 @@ const EditListSubItems = ({ listid, subItems, callbackSubItemChange }) => {
     };
 
     return (
-        <MaterialTable
-            columns={listEditTable.columns}
-            title=""
-            data={subItems}
-            options={listEditTable.options}
-            onRowClick={eventHandlers.handleItemClick}
-            editable={{
-                isEditable: (rowData) => rowData.bought === false,
-                isDeletable: (rowData) => rowData.bought === false,
-                onRowAdd: eventHandlers.handleItemAdd,
-                onRowUpdate: eventHandlers.handleItemUpdate,
-                onRowDelete: eventHandlers.handleItemDelete,
-            }}
-        />
+        <Container maxWidth="sm">
+            <TextField
+                id="addItem"
+                size="small"
+                fullWidth
+                placeholder="enter item to add"
+                variant="outlined"
+                value={addItem}
+                autoFocus
+                onKeyDown={eventHandlers.handleKeyDown}
+                onChange={eventHandlers.handleChange}
+            />
+            <MaterialTable
+                columns={listEditTable.columns}
+                title=""
+                data={subItems}
+                options={listEditTable.options}
+                onRowClick={eventHandlers.handleItemClick}
+                editable={{
+                    isEditable: (rowData) => rowData.bought === false,
+                    isDeletable: (rowData) => rowData.bought === false,
+                    onRowUpdate: eventHandlers.handleItemUpdate,
+                    onRowDelete: eventHandlers.handleItemDelete,
+                }}
+            />
+        </Container>
     );
 };
 

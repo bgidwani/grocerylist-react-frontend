@@ -62,9 +62,19 @@ export default function GroceryItemAddCard() {
         setName(e.target.value);
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            createNewList();
+        }
+    };
+
     const handleSave = (e) => {
         e.preventDefault();
 
+        createNewList();
+    };
+
+    const createNewList = () => {
         if (name && name !== '') {
             GroceryListService.create(name).then(() => {
                 //refresh the data on the list page
@@ -99,6 +109,7 @@ export default function GroceryItemAddCard() {
                             margin="normal"
                             required
                             fullWidth
+                            autoFocus
                             name="newitem"
                             label="List Name"
                             id="newitem"
@@ -107,6 +118,7 @@ export default function GroceryItemAddCard() {
                                 name.length === 0 ? 'List name is required' : ''
                             }
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                         <Button
                             variant="contained"
