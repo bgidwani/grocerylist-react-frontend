@@ -1,7 +1,7 @@
 import * as utils from '../utils';
 import AuthService from '../auth/auth.service';
 
-const testdata = {
+/*const testdata = {
     hits: [
         {
             recipe: {
@@ -28,7 +28,7 @@ const testdata = {
             },
         },
     ],
-};
+};*/
 
 class ReceipeService {
     search(keyword) {

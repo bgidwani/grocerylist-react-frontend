@@ -11,7 +11,7 @@ import {
     Avatar,
 } from '@material-ui/core';
 
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import { useTopNavDataContext } from '../topnav/topnav.provider';
 import { useAuthDataContext } from '../auth-provider';
@@ -60,13 +60,13 @@ const TopNav = () => {
     return user ? (
         <AppBar position="sticky">
             <Toolbar>
-                <Link href="#">
+                <NavLink to="/">
                     <Avatar
                         alt="logo"
                         src="/assets/main_image.jpg"
                         className={classes.largelogo}
                     />
-                </Link>
+                </NavLink>
                 <Typography
                     variant="h6"
                     className={classes.title}

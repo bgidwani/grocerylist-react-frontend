@@ -15,9 +15,13 @@ const GroceryListProvider = (props) => {
      * fetch the auth data from a source, like a cookie or
      * the localStorage.
      */
-    useEffect(() => {
-        refreshList();
-    }, []);
+    useEffect(
+        () => {
+            refreshList();
+        },
+        // eslint-disable-next-line
+        []
+    );
 
     const refreshList = () => {
         if (user) {

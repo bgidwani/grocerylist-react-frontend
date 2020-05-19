@@ -1,14 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
+import { Modal, Fab, TextField, Fade } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { Box } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import GroceryListService from '../grocerylist.service';
-import { useAuthDataContext } from '../../auth-provider';
-import { useGroceryListContext } from '../context/grocerylist-provider';
+import GroceryListService from '../../grocerylist.service';
+import { useAuthDataContext } from '../../../auth-provider';
+import { useGroceryListContext } from '../../context/grocerylist-provider';
+import RewardsSaveButton from '../../../components/rewards.savebutton';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -18,12 +15,6 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         maxWidth: 300,
-    },
-    media: {
-        marginLeft: 50,
-        marginTop: 40,
-        height: 200,
-        width: 200,
     },
     paper: {
         position: 'absolute',
@@ -43,12 +34,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function GroceryItemAddCard() {
+export default function AddList() {
     const { user } = useAuthDataContext();
     const { refreshList, setToast } = useGroceryListContext();
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [name, setName] = React.useState('');
+    const [dirty, setDirty] = React.useState(false);
+    const [saving, setSaving] = React.useState(false);
+    const saveButtonRef = React.useRef(null);
 
     const handleOpen = () => {
         setOpen(true);
@@ -59,33 +53,44 @@ export default function GroceryItemAddCard() {
     };
 
     const handleChange = (e) => {
-        setName(e.target.value);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            createNewList();
+        setDirty(true);
+        let currVal = e.target.value;
+        if (currVal && currVal.trim() !== '') {
+            setName(currVal.trim());
         }
     };
 
-    const handleSave = (e) => {
-        e.preventDefault();
-
-        createNewList();
+    const handleKeyDown = (e) => {
+        //e.preventDefault();
+        if (e.key === 'Enter') {
+            // console.log(saveButtonRef);
+            if (saveButtonRef) {
+                saveButtonRef.current.click();
+            }
+        }
     };
 
-    const createNewList = () => {
+    const createNewList = async () => {
         if (name && name !== '') {
-            GroceryListService.create(name).then(() => {
-                //refresh the data on the list page
-                refreshList();
+            setSaving(true);
+            await GroceryListService.create(name).then(() => {
+                setTimeout(() => {
+                    //refresh the data on the list page
+                    refreshList();
 
-                //close the modal pop-up
-                setOpen(false);
+                    //close the modal pop-up
+                    setOpen(false);
 
-                //display toast message on parent
-                setToast(`List ${name} added successfully`);
+                    //display toast message on parent
+                    setToast(`List ${name} added successfully`);
+
+                    setSaving(false);
+                }, 1500);
             });
+            return true;
+        } else {
+            setName('');
+            return false;
         }
     };
 
@@ -102,33 +107,34 @@ export default function GroceryItemAddCard() {
                 <AddIcon />
             </Fab>
             <Modal className={classes.modal} open={open} onClose={handleClose}>
-                <div className={classes.paper}>
-                    <Box>
+                <Fade in={open}>
+                    <div className={classes.paper}>
                         <TextField
                             variant="outlined"
                             margin="normal"
-                            required
                             fullWidth
+                            required
                             autoFocus
+                            disabled={saving}
                             name="newitem"
                             label="List Name"
                             id="newitem"
-                            error={name.length === 0 ? true : false}
+                            error={dirty && name.length === 0 ? true : false}
                             helperText={
-                                name.length === 0 ? 'List name is required' : ''
+                                dirty && name.length === 0
+                                    ? 'List name is required'
+                                    : ''
                             }
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
                         />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleSave}
-                        >
-                            Save
-                        </Button>
-                    </Box>
-                </div>
+
+                        <RewardsSaveButton
+                            ref={saveButtonRef}
+                            onClickHandler={createNewList}
+                        />
+                    </div>
+                </Fade>
             </Modal>
         </div>
     );

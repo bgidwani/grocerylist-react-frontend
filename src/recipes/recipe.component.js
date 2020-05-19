@@ -49,7 +49,7 @@ const Recipes = () => {
     const [search, setSeach] = useState('');
     const [recipes, setRecipes] = useState([]);
 
-    useEffect(() => setTitle('Recipes'), []);
+    useEffect(() => setTitle('Recipes'));
 
     const handleChange = (e) => {
         setSeach(e.target.value);

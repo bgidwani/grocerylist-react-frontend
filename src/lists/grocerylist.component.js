@@ -12,7 +12,7 @@ const GroceryList = () => {
 
     const { setTitle } = useTopNavDataContext();
 
-    useEffect(() => setTitle('Grocery List'), []);
+    useEffect(() => setTitle('Grocery List'));
 
     return (
         <GroceryListProvider>
