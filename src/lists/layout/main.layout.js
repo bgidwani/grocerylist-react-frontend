@@ -5,7 +5,7 @@ import GroceryItemCard from './groceryitem.layout';
 import AddListComponent from './components/add.list';
 import { useGroceryListContext } from '../context/grocerylist-provider';
 import MuiAlert from '@material-ui/lab/Alert';
-import EmptyListAnimation from './components/emptylists';
+import EmptyList from './components/empty.lists';
 
 const GroceryListLayout = (props) => {
     const { items, toastMessage, setToast } = useGroceryListContext();
@@ -24,29 +24,26 @@ const GroceryListLayout = (props) => {
                     spacing={5}
                     style={{ marginTop: '5px', padding: '5px' }}
                 >
-                    {items.map(
-                        (item, index) =>
-                            console.log(item.name, index) || (
-                                <Zoom
-                                    key={item.id}
-                                    in
-                                    style={{
-                                        transitionDelay: `${index * 250}ms`,
-                                    }}
-                                >
-                                    <Grid item>
-                                        <GroceryItemCard
-                                            listid={item._id}
-                                            name={item.name}
-                                            items={item.items}
-                                        />
-                                    </Grid>
-                                </Zoom>
-                            )
-                    )}
+                    {items.map((item, index) => (
+                        <Zoom
+                            key={item._id}
+                            in
+                            style={{
+                                transitionDelay: `${index * 250}ms`,
+                            }}
+                        >
+                            <Grid key={item._id} item>
+                                <GroceryItemCard
+                                    listid={item._id}
+                                    name={item.name}
+                                    items={item.items}
+                                />
+                            </Grid>
+                        </Zoom>
+                    ))}
                 </Grid>
             )}
-            {items.length === 0 && <EmptyListAnimation />}
+            {items.length === 0 && <EmptyList />}
             {toastMessage && (
                 <Snackbar
                     open={toastMessage !== ''}

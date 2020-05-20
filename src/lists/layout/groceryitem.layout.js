@@ -22,6 +22,9 @@ import DisplayListSubItems from './components/display.list.subitems';
 import EditListSubItems from './components/edit.list.subitems';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
+import { Animator } from 'lottie-react';
+import listData from '../../assets/lottie/list.json';
+import noSubitemsInList from '../../assets/lottie/noSubitemsInList.json';
 
 const useStyles = makeStyles(() => ({
     card: {
@@ -31,9 +34,7 @@ const useStyles = makeStyles(() => ({
         backgroundColor: red[500],
     },
     media: {
-        marginLeft: 35,
-        height: 220,
-        width: 220,
+        height: 240,
     },
 }));
 
@@ -46,6 +47,7 @@ export default function GroceryItemCard({ listid, name, items }) {
     const { refreshList, setToast } = useGroceryListContext();
     const [subItems, setSubItems] = React.useState(items);
     const [isEditMode, setEditMode] = React.useState(false);
+    const imgDisplayData = subItems.length > 0 ? listData : noSubitemsInList;
 
     const handleListDelete = () => {
         setAnchorEl(null);
@@ -115,8 +117,15 @@ export default function GroceryItemCard({ listid, name, items }) {
                                         size="small"
                                         onClick={handleListEdit}
                                     >
-                                        <Edit color="inherit" />
-                                        <Typography variant="subtitle1">
+                                        <Edit
+                                            fontSize="small"
+                                            color="primary"
+                                        />
+                                        <Typography
+                                            style={{ paddingLeft: '5px' }}
+                                            color="textPrimary"
+                                            variant="subtitle1"
+                                        >
                                             Edit
                                         </Typography>
                                     </IconButton>
@@ -126,8 +135,15 @@ export default function GroceryItemCard({ listid, name, items }) {
                                         size="small"
                                         onClick={handleListDelete}
                                     >
-                                        <DeleteIcon color="inherit" />
-                                        <Typography variant="subtitle1">
+                                        <DeleteIcon
+                                            fontSize="small"
+                                            color="secondary"
+                                        />
+                                        <Typography
+                                            style={{ paddingLeft: '5px' }}
+                                            color="textSecondary"
+                                            variant="subtitle1"
+                                        >
                                             Delete
                                         </Typography>
                                     </IconButton>
@@ -137,10 +153,10 @@ export default function GroceryItemCard({ listid, name, items }) {
                     }
                     title={<Typography variant="h6">{name}</Typography>}
                 />
-                <CardMedia
-                    className={classes.media}
-                    image="/assets/cart-checked.png"
-                />
+                <CardMedia className={classes.media}>
+                    <Animator animationData={imgDisplayData} />
+                </CardMedia>
+
                 <CardContent>
                     <DisplayListSubItems
                         subItems={subItems}
@@ -156,7 +172,7 @@ export default function GroceryItemCard({ listid, name, items }) {
                 <DialogTitle id="edit-list-subitems">{name}</DialogTitle>
                 <DialogContent>
                     <EditListSubItems
-                        listid={listid}
+                        listId={listid}
                         subItems={subItems}
                         callbackSubItemChange={setSubItems}
                     />

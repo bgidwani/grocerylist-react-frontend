@@ -16,7 +16,7 @@ const GroceryList = () => {
 
     return (
         <GroceryListProvider>
-            <GroceryListLayout classes={classes} />
+            <GroceryListLayout key="list" classes={classes} />
         </GroceryListProvider>
     );
 };

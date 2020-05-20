@@ -1,9 +1,9 @@
 import React from 'react';
 import { Animator } from 'lottie-react';
-import emptyListAnimation from '../../../assets/lottie/empty_cart.json';
+import emptyListData from '../../../assets/lottie/groovy_walk.json';
 import { Container, Typography } from '@material-ui/core';
 
-const EmptyListAnimation = () => {
+const EmptyList = () => {
     return (
         <Container
             maxWidth="sm"
@@ -17,7 +17,7 @@ const EmptyListAnimation = () => {
         >
             <Animator
                 style={{ height: '500px' }}
-                animationData={emptyListAnimation}
+                animationData={emptyListData}
             />
             <Typography variant="overline" display="block" gutterBottom>
                 Feeling a bit lonely here, try adding a list
@@ -26,4 +26,4 @@ const EmptyListAnimation = () => {
     );
 };
 
-export default EmptyListAnimation;
+export default EmptyList;
