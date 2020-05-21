@@ -21,10 +21,11 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        fontSize: '14px',
+        fontSize: '12px',
     },
     recipecard: {
         maxWidth: 345,
@@ -46,6 +47,21 @@ const useStyles = makeStyles((theme) => ({
     expandOpen: {
         transform: 'rotate(180deg)',
     },
+    mainDetailsContent: {
+        textAlign: 'left',
+        letterSpacing: 1.5,
+        '& > div': {
+            fontWeight: 'bold',
+            '& > span': {
+                paddingLeft: '5px',
+                fontWeight: 'normal',
+            },
+        },
+    },
+    itemSpacer: {
+        width: '2%',
+        float: 'left',
+    },
     nutritionalSummary: {
         width: '100%',
     },
@@ -63,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     },
     ingredientItems: {
         textTransform: 'none',
-        margin: theme.spacing(1),
+        margin: theme.spacing(2),
     },
     ingredientSource: {
         paddingTop: theme.spacing(1),
@@ -71,14 +87,79 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const RecipeResults = ({ recipe }) => {
-    //console.log(recipe);
+const RecipeCard = ({ recipe }) => {
     const classes = useStyles();
 
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
+    };
+
+    const Servings = () => (
+        <span style={{ position: 'relative' }}>
+            <RestaurantMenuIcon
+                style={{ position: 'relative', float: 'left' }}
+                fontSize="small"
+                color="primary"
+            />
+            <Typography
+                style={{
+                    paddingLeft: '5px',
+                    position: 'relative',
+                    float: 'left',
+                }}
+                variant="subtitle2"
+            >
+                <strong>Servings:</strong>&nbsp;{recipe.yield}
+            </Typography>
+        </span>
+    );
+
+    const MainDetails = () => {
+        const TotalTime = () =>
+            recipe.totalTime && recipe.totalTime > 0 ? (
+                <div>
+                    Cook Time:
+                    <span>{recipe.totalTime} minutes</span>
+                </div>
+            ) : null;
+
+        const CaloriesPerServing = () =>
+            recipe.caloriesPerServing && (
+                <div>
+                    Calories (per serving):
+                    <span>
+                        {recipe.caloriesPerServing.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                        })}
+                        &nbsp;kcal
+                    </span>
+                </div>
+            );
+
+        const TotalWeight = () =>
+            recipe.totalWeight && (
+                <div>
+                    Total Weight:
+                    <span>
+                        {recipe.totalWeight.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                        })}
+                        &nbsp;g
+                    </span>
+                </div>
+            );
+
+        return (
+            <Typography variant="body2" color="textSecondary" component="p">
+                <div className={classes.mainDetailsContent}>
+                    <TotalTime />
+                    <CaloriesPerServing />
+                    <TotalWeight />
+                </div>
+            </Typography>
+        );
     };
 
     return (
@@ -96,17 +177,15 @@ const RecipeResults = ({ recipe }) => {
                         </IconButton>
                     }
                     title={
-                        <Typography align="center" variant="h6">
+                        <Typography
+                            style={{ letterSpacing: 1.25 }}
+                            align="left"
+                            variant="h6"
+                        >
                             {recipe.label}
                         </Typography>
                     }
-                    subheader={
-                        <Typography align="center">
-                            <Typography variant="subtitle1">
-                                <b>Servings:</b> {recipe.yield}
-                            </Typography>
-                        </Typography>
-                    }
+                    subheader={<Servings />}
                 />
                 <CardMedia
                     className={classes.media}
@@ -114,41 +193,7 @@ const RecipeResults = ({ recipe }) => {
                     title={recipe.label}
                 />
                 <CardContent>
-                    {recipe.totalTime && recipe.totalTime > 0 ? (
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                        >
-                            <b>Cook Time:</b> {recipe.totalTime} minutes
-                        </Typography>
-                    ) : null}
-                    {recipe.calories && (
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                        >
-                            <b>Total Calories:</b>{' '}
-                            {recipe.calories.toLocaleString(undefined, {
-                                maximumFractionDigits: 2,
-                            })}{' '}
-                            kcal
-                        </Typography>
-                    )}
-                    {recipe.totalWeight && (
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                        >
-                            <b>Total Weight:</b>{' '}
-                            {recipe.totalWeight.toLocaleString(undefined, {
-                                maximumFractionDigits: 2,
-                            })}{' '}
-                            g
-                        </Typography>
-                    )}
+                    <MainDetails />
                 </CardContent>
                 <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">
@@ -171,7 +216,7 @@ const RecipeResults = ({ recipe }) => {
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent className={classes.ingredientDetails}>
                         <Typography
-                            color="textPrimary"
+                            variant="overline"
                             className={classes.ingredientHeading}
                             paragraph
                         >
@@ -193,7 +238,7 @@ const RecipeResults = ({ recipe }) => {
                                     expandIcon={<ExpandMoreIcon />}
                                 >
                                     <Typography
-                                        variant="subtitle1"
+                                        variant="overline"
                                         className={classes.nutritionalHeading}
                                     >
                                         Nutrition Profile:
@@ -233,4 +278,4 @@ const RecipeResults = ({ recipe }) => {
     );
 };
 
-export default RecipeResults;
+export default RecipeCard;

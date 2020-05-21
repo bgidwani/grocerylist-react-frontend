@@ -6,6 +6,7 @@ import { green, red } from '@material-ui/core/colors';
 import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
+import SearchIcon from '@material-ui/icons/Search';
 import SaveIcon from '@material-ui/icons/Save';
 import * as utils from '../utils';
 
@@ -13,10 +14,13 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         alignItems: 'center',
+        position: 'relative',
+        float: 'right',
+        top: (props) => props.top || 0,
+        left: (props) => props.left || 0,
     },
     wrapper: {
         margin: theme.spacing(1),
-        position: 'relative',
     },
     buttonSuccess: {
         backgroundColor: green[500],
@@ -33,14 +37,14 @@ const useStyles = makeStyles((theme) => ({
     fabProgress: {
         color: green[500],
         position: 'absolute',
-        top: -6,
-        left: -6,
+        top: 0,
+        left: 0,
         zIndex: 1,
     },
 }));
 
-const SaveButtonWithLoading = React.forwardRef((props, ref) => {
-    const classes = useStyles();
+const ButtonWithLoading = React.forwardRef((props, ref) => {
+    const classes = useStyles({ left: props.left, top: props.top });
     const onClickHandler = props.onClickHandler;
     const [loading, setLoading] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
@@ -90,6 +94,8 @@ const SaveButtonWithLoading = React.forwardRef((props, ref) => {
                         <ErrorIcon />
                     ) : success ? (
                         <CheckIcon />
+                    ) : props.type === 'search' ? (
+                        <SearchIcon />
                     ) : (
                         <SaveIcon />
                     )}
@@ -105,4 +111,4 @@ const SaveButtonWithLoading = React.forwardRef((props, ref) => {
     );
 });
 
-export default SaveButtonWithLoading;
+export default ButtonWithLoading;

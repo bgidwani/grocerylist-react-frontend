@@ -5,7 +5,7 @@ import AddIcon from '@material-ui/icons/Add';
 import GroceryListService from '../../grocerylist.service';
 import { useAuthDataContext } from '../../../auth-provider';
 import { useGroceryListContext } from '../../context/grocerylist-provider';
-import RewardsSaveButton from '../../../components/rewards.savebutton';
+import RewardsButton from '../../../components/rewards.button';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -13,12 +13,10 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    card: {
-        maxWidth: 300,
-    },
     paper: {
         position: 'absolute',
-        width: 400,
+        width: 350,
+        height: 90,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -112,12 +110,12 @@ export default function AddList() {
                         <TextField
                             variant="outlined"
                             margin="normal"
-                            fullWidth
+                            style={{ width: '80%' }}
                             required
                             autoFocus
                             disabled={saving}
                             name="newitem"
-                            label="List Name"
+                            label="Name of the new list"
                             id="newitem"
                             error={dirty && name.length === 0 ? true : false}
                             helperText={
@@ -129,8 +127,10 @@ export default function AddList() {
                             onKeyDown={handleKeyDown}
                         />
 
-                        <RewardsSaveButton
+                        <RewardsButton
                             ref={saveButtonRef}
+                            type="save"
+                            top="-70px"
                             onClickHandler={createNewList}
                         />
                     </div>

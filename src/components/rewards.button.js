@@ -1,6 +1,6 @@
 import React from 'react';
 import Reward from 'react-rewards';
-import SaveButtonWithLoading from './savebutton.with.loading';
+import ButtonWithLoading from './button.with.loading';
 
 const RewardsSaveButton = React.forwardRef((props, ref) => {
     const onClickHandler = props.onClickHandler;
@@ -46,9 +46,11 @@ const RewardsSaveButton = React.forwardRef((props, ref) => {
 
     return (
         <Reward ref={rewardRef} type="confetti" config={rewardConfig}>
-            <SaveButtonWithLoading
+            <ButtonWithLoading
                 ref={saveButtonRef}
                 onClickHandler={handleButtonClick}
+                left={props.left}
+                top={props.top}
             />
         </Reward>
     );

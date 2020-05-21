@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
+import { Paper, Zoom, Grid, Typography } from '@material-ui/core';
+import { Animator } from 'lottie-react';
 
 import { useTopNavDataContext } from '../topnav/topnav.provider';
-import RecipeResults from './recipe.result.component';
+import RecipeCard from './components/recipe.card';
 import RecipeService from './recipe.service';
+import RecipeSearchBar from './components/searchbar.recipe';
+import InitialRecipeLoad from './components/empty.load';
+import searchingData from '../assets/lottie/searching.json';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,54 +42,93 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
     },
     searchresult: {
-        paddingTop: '30px',
+        paddingTop: '20px',
     },
 }));
+
+const defaultRecipes = [];
 
 const Recipes = () => {
     const classes = useStyles();
     const { setTitle } = useTopNavDataContext();
-    const [search, setSeach] = useState('');
-    const [recipes, setRecipes] = useState([]);
+    const [initialLoad, setInitialLoad] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [recipes, setRecipes] = useState(defaultRecipes);
 
     useEffect(() => setTitle('Recipes'));
 
-    const handleChange = (e) => {
-        setSeach(e.target.value);
-    };
+    const handleSearch = async (term) => {
+        setInitialLoad(false);
+        setLoading(true);
+        setError(false);
 
-    const handleSearch = async (e) => {
-        let data = await RecipeService.search(search);
+        setRecipes(defaultRecipes);
+
+        try {
+            let data = await RecipeService.search(term);
+            if (Array.isArray(data)) {
+                setRecipes(data);
+            } else {
+                setError(true);
+            }
+        } catch (err) {
+            console.log(err);
+            setError(true);
+        }
+
         //console.log('Response data', data);
-        setRecipes(data);
+        setLoading(false);
     };
 
     return (
         <div className={classes.root}>
-            <Paper elevation={2} className={classes.searchgroup}>
-                <input
-                    type="text"
-                    name="txtsearch"
-                    placeholder="enter ingredient to search"
-                    className={classes.searchtext}
-                    onChange={handleChange}
-                />
-
-                <button
-                    type="button"
-                    className={classes.searchbutton}
-                    onClick={handleSearch}
-                >
-                    Search
-                </button>
-            </Paper>
+            <RecipeSearchBar handleSearch={handleSearch} />
 
             <Paper elevation={2} className={classes.searchresult}>
-                <Grid container spacing={10} style={{ padding: '24px' }}>
-                    {recipes.map((recipeitem) => (
-                        <Grid item xs={12} sm={6} md={4} lg={4} xl={3}>
-                            <RecipeResults recipe={recipeitem} />
+                <Grid
+                    container
+                    justify="space-evenly"
+                    spacing={5}
+                    style={{
+                        marginTop: '5px',
+                        padding: '5px',
+                        paddingBottom: '50px',
+                    }}
+                >
+                    {initialLoad && <InitialRecipeLoad />}
+                    {loading && (
+                        <Grid item xs={12}>
+                            <Animator
+                                style={{ height: '400px' }}
+                                animationData={searchingData}
+                            />
                         </Grid>
+                    )}
+                    {error && (
+                        <Grid item xs={12}>
+                            <Typography
+                                variant="overline"
+                                display="block"
+                                color="error"
+                                gutterBottom
+                            >
+                                Something went wrong
+                            </Typography>
+                        </Grid>
+                    )}
+                    {recipes.map((recipeitem, index) => (
+                        <Zoom
+                            key={recipeitem._id}
+                            in
+                            style={{
+                                transitionDelay: `${index * 200}ms`,
+                            }}
+                        >
+                            <Grid key={recipeitem._id} item>
+                                <RecipeCard recipe={recipeitem} />
+                            </Grid>
+                        </Zoom>
                     ))}
                 </Grid>
             </Paper>
