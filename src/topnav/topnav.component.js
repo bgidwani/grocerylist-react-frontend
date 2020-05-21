@@ -63,7 +63,7 @@ const TopNav = () => {
                 <NavLink to="/">
                     <Avatar
                         alt="logo"
-                        src="/assets/main_image.jpg"
+                        src="/assets/shopping-cart.png"
                         className={classes.largelogo}
                     />
                 </NavLink>

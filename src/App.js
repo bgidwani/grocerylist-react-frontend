@@ -3,8 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { withStyles } from '@material-ui/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
+import { purple, green } from '@material-ui/core/colors';
+import ReactGA from 'react-ga';
 
 import AuthDataProvider from './auth-provider';
 import Router from './router';
@@ -54,6 +54,10 @@ class App extends Component {
         this.state = {
             theme: themes[0],
         };
+    }
+
+    componentDidMount() {
+        ReactGA.initialize('UA-165265113-2');
     }
 
     render() {

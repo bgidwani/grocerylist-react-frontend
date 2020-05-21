@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import RewardsButton from '../../components/rewards.button';
+import ReactGA from 'react-ga';
 
 const useStyles = makeStyles((theme) => ({
     searchgroup: {
@@ -49,6 +50,11 @@ const SearchBar = ({ handleSearch }) => {
     const invokeSearch = async () => {
         let searchTerm = search ? search.trim() : '';
         if (searchTerm !== '') {
+            ReactGA.event({
+                category: 'Search',
+                action: 'Recipe search start',
+                label: searchTerm,
+            });
             await handleSearch(searchTerm);
         }
     };

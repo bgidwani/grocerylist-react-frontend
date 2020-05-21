@@ -30,7 +30,7 @@ import AuthService from '../auth/auth.service';
     ],
 };*/
 
-class ReceipeService {
+class RecipeService {
     search(keyword) {
         //return testdata;
 
@@ -42,4 +42,4 @@ class ReceipeService {
     }
 }
 
-export default new ReceipeService();
+export default new RecipeService();

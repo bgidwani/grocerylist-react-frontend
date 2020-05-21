@@ -22,6 +22,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
+import ReactGA from 'react-ga';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -267,9 +268,13 @@ const RecipeCard = ({ recipe }) => {
                             className={classes.ingredientSource}
                         >
                             <b>Details:</b>{' '}
-                            <Link href={recipe.url} target="_blank">
+                            <ReactGA.OutboundLink
+                                eventLabel={`${recipe.source} - ${recipe.url}`}
+                                to={recipe.url}
+                                target="_blank"
+                            >
                                 {recipe.source}
-                            </Link>
+                            </ReactGA.OutboundLink>
                         </Typography>
                     </CardContent>
                 </Collapse>
