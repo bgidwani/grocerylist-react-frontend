@@ -1,6 +1,6 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef } from 'react';
 import FlipMove from 'react-flip-move';
-import { makeStyles, Icon, TextField, Container } from '@material-ui/core';
+import { makeStyles, TextField, Container } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import GroceryListService from '../../grocerylist.service';
